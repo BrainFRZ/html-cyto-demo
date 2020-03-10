@@ -1,14 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import cytoscape from 'cytoscape';
 import GraphData from './GraphData';
-import Dump from './../demo.js';
 import { htmlLabelConfig } from './configs/HTMLLabelConfig';
 import nodeHtmlLabel from 'cytoscape-node-html-label';
 nodeHtmlLabel(cytoscape);
 
 export default function Graph(props) {
-  const { style, config, graphId, layout='cose' } = props;
-  const graphData = Dump.analysisOutput.graphs[graphId];
+  const { style, config, graphId, layout='cose', graphs } = props;
+  const graphData = graphs[graphId];
   const data = GraphData(graphData);
   const cyElem = useRef(undefined);
   const cyRef = useRef(cytoscape(config));

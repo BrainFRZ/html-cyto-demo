@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Cytoscape HTML",
+  "name": "Demo of Cytoscape HTML tags",
   "icons": [
     {
       "src": "favicon.ico",

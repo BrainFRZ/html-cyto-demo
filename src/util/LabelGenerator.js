@@ -68,7 +68,7 @@ const generateHTMLNumSpan = numStr => {
 }
 const generateGutterSpan = (addr, width) => {
   const backgroundColor = '#e6e6e6';
-  return `<span style="width:${width}px;background-color:${backgroundColor};color:#000000;font-weight:normal;margin:0px 0px 0px -6px">`+
+  return `<span style="width:${width}px;background-color:${backgroundColor};color:#000000;font-weight:normal;margin:0px 0px 0px -5px">`+
           `${addr}</span>`;
 }
 

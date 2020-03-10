@@ -1,25 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-//import Dump from './demo.js';
-//import { generateHTMLBlock, generateHTMLTag } from './graph/LabelGenerator';
-import GraphViewer from './GraphViewer';
-
-//const code = Dump.analysisOutput.code;
+import { GraphViewer, FuncSelector } from './viewers/index';
+import Grid from '@material-ui/core/Grid';
+import Dump from './demo.js';
 
 function App() {
-  const graphId = '__libc_csu_init';
-  return <GraphViewer graphId={graphId} />;
+  const analysis = Dump.analysisOutput;
+  const [graphId, setGraphId] = useState(null);
+  return (
+    <Grid container>
+      <Grid item xs={10}>
+        <GraphViewer graphId={graphId} analysis={analysis} />
+      </Grid>
+      <Grid item xs={2}>
+        <FuncSelector analysis={analysis} setGraph={setGraphId} />
+      </Grid>
+    </Grid>
+  );
 }
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-/*
-  const block = code["4160"];
-  const [html, width, height] = generateHTMLBlock(block);
-  return (<>
-    <div dangerouslySetInnerHTML={{__html: html}} />
-    <br /><br /><br />
-    <div style={{fontFamily:'Roboto'}}>{`Width: ${width}`}</div>
-    <div style={{fontFamily:'Roboto'}}>{`Height: ${height}`}</div>
-  </>);
-*/

@@ -58,13 +58,13 @@ function calcHeight() {
   return element => {
     const addr = element.data('label');
     const [label, width, height, backgroundColor] = getLabel(addr);
-    return height;
+    return height+1;
   }
 }
 function calcWidth() {
   return element => {
     const addr = element.data('label');
     const [label, width, height, backgroundColor] = getLabel(addr);
-    return width;
+    return width+1;
   }
 }
