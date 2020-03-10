@@ -26,29 +26,31 @@ const INSTR_WIDTH = 80;
 const SIDE_PAD = 10;
 export const generateHTMLBlock = block => {
   const blockCode = [], backgroundColor='#F5EABA';
-  let width = 0, lineWidth = 0, code = '', height = 14;
+  const gutterWidth = getGutterWidth(block);
+  let width = 0, lineWidth = 0, code = '', height = 0;
   block.forEach(instr => {
     if (instr.label)
       [code, lineWidth] = generateHTMLLabelLine(instr.label);
     else
       [code, lineWidth] = generateHTMLInstrLine(instr.mnemonic, instr.args);
+    code = generateGutterSpan(instr.addr, gutterWidth) + code;
     blockCode.push(code);
     width = Math.max(width, lineWidth);
     height += 18;
   });
-  width += 10;
+  width += 10 + gutterWidth;
   return ([
     (`<div style="font-family:Courier;font-weight:bold;background-color:${backgroundColor};color:#00a5e7">
         ${blockCode.join('<br />')}
       </div>`), width, height, backgroundColor]);
 }
 
-const generateHTMLLabelLine = label => [`<font color="#0016b5">${label}:</font>`, label.length*10+SIDE_PAD];
+const generateHTMLLabelLine = label => [`<span style="color:#0016b5;margin:0px 0px 0px 5px">${label}:</span>`, label.length*10+SIDE_PAD];
 const generateHTMLInstrLine = (mnemonic, args) => {
-  let code = `<span style="display:inline-block;width:${INSTR_WIDTH}px">${mnemonic}</span>`;
+  let code = `<span style="display:inline-block;width:${INSTR_WIDTH}px;margin:0px 0px 0px 5px">${mnemonic}</span>`;
   let argsStr = args.join(', ');
   let groups = argsStr.match(/\d+|\D+/g); // split arg on digits
-  let width = INSTR_WIDTH+SIDE_PAD;
+  let width = INSTR_WIDTH+SIDE_PAD+5;
   let groupWidth = 0, groupCode = '';
   if (groups) {
     groups.forEach(group => {
@@ -63,6 +65,16 @@ const generateHTMLNumSpan = numStr => {
   if (numStr.length > AUTO_HEX_DIGITS)
     numStr = numToHex(numStr);
   return [`<font color="#e67800">${numStr}</font>`, numStr.length*10];
+}
+const generateGutterSpan = (addr, width) => {
+  const backgroundColor = '#e6e6e6';
+  return `<span style="width:${width}px;background-color:${backgroundColor};color:#000000;font-weight:normal;margin:0px 0px 0px -6px">`+
+          `${addr}</span>`;
+}
+
+const getGutterWidth = block => {
+  const lastAddr = block.slice(-1);  // Addrs are in increasing order
+  return lastAddr.length * 10 + 10;
 }
 
 /* global BigInt */
