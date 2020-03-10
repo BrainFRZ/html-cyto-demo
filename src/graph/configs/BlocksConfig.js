@@ -1,13 +1,15 @@
-export const blocksConfig = (labelState) => ({
+import getLabel from '../../util/LabelGenerator';
+
+export const blocksConfig = ({
   style: [{
       selector: 'node',
       style: {
-        'background-color': getBackgroundColor(labelState), // dark blue '#0016b5'
-        'label': getLabel(labelState),
+        'background-color': getBackgroundColor(), // dark blue '#0016b5'
+        'label': getHTMLLabel(),
         'text-valign': 'center',
         'shape': 'rectangle',
-        'height': calcHeight(labelState),
-        'width': calcWidth(labelState),
+        'height': calcHeight(),
+        'width': calcWidth(),
         'text-wrap': 'wrap',
         'font-family': 'Courier New',
         'color': '#FFFFFF', // white
@@ -38,25 +40,31 @@ function getStyle(prop, defaultStyle) {
   }
 }
 
-function getBackgroundColor(labelStore, code) {
+function getBackgroundColor() {
   return element => {
-    return '#0016b5';
+    const addr = element.data('label');
+    const [label, width, height, backgroundColor] = getLabel(addr);
+    return backgroundColor;
   }
 }
-function getLabel(labelStore, code) {
+function getHTMLLabel() {
   return element => {
+    const addr = element.data('label');
+    const [label, width, height, backgroundColor] = getLabel(addr);
     return element.data('label');
   }
 }
-function calcHeight(labelStore, code) {
+function calcHeight() {
   return element => {
-    return '18px';
+    const addr = element.data('label');
+    const [label, width, height, backgroundColor] = getLabel(addr);
+    return height;
   }
 }
-function calcWidth(labelStore, code) {
+function calcWidth() {
   return element => {
-    const label = element.data('label');
-    console.log(`label in calcWidth: ${label}`);
-    return label.length * 10 + 8;
+    const addr = element.data('label');
+    const [label, width, height, backgroundColor] = getLabel(addr);
+    return width;
   }
 }

@@ -1,20 +1,32 @@
-export const generateHTMLTag = tag => {
+import Dump from './../demo';
+const code = Dump.analysisOutput.code;
+
+export default function getLabel(blockAddr) {
+  let label;
+  if (blockAddr in code)
+    label = generateHTMLBlock(code[blockAddr]);
+  else
+    label = generateHTMLTag(blockAddr);
+  return label;
+}
+
+const generateHTMLTag = tag => {
   const width = tag.length * 10 + 8;
-  const height = 18;
+  const height = 20;
+  const backgroundColor = '#0016b5';
+  const style = `font-family:Courier;font-weight:bold;background-color:${backgroundColor};color:#FFFFFF`;
   return ([
-    (`<div style="max-width:${width}px;max-height:${height}px">
-        <div style="font-family:Courier;font-weight:bold;background-color:#0016b5;color:#FFFFFF;padding:0px 0px 0px 5px;height:100%;margin:0px">
-          ${tag}
-        </div>
-      </div>`), width, height]);
+    (`<div style="${style}">
+        ${tag}
+      </div>`), width, height, backgroundColor]);
 }
 
 const AUTO_HEX_DIGITS = 6;
 const INSTR_WIDTH = 80;
 const SIDE_PAD = 10;
 export const generateHTMLBlock = block => {
-  const blockCode = [];
-  let width = 0, lineWidth = 0, code = '', height = 10;
+  const blockCode = [], backgroundColor='#F5EABA';
+  let width = 0, lineWidth = 0, code = '', height = 14;
   block.forEach(instr => {
     if (instr.label)
       [code, lineWidth] = generateHTMLLabelLine(instr.label);
@@ -24,12 +36,11 @@ export const generateHTMLBlock = block => {
     width = Math.max(width, lineWidth);
     height += 18;
   });
+  width += 10;
   return ([
-    (`<div style="max-width:${width}px">
-        <div style="font-family:Courier;font-weight:bold;background-color:#F5EABA;color:#00a5e7;padding:5px 0px 5px 13px">
-          ${blockCode.join('<br />')}
-        </div>
-      </div>`), width, height]);
+    (`<div style="font-family:Courier;font-weight:bold;background-color:${backgroundColor};color:#00a5e7">
+        ${blockCode.join('<br />')}
+      </div>`), width, height, backgroundColor]);
 }
 
 const generateHTMLLabelLine = label => [`<font color="#0016b5">${label}:</font>`, label.length*10+SIDE_PAD];
@@ -39,11 +50,13 @@ const generateHTMLInstrLine = (mnemonic, args) => {
   let groups = argsStr.match(/\d+|\D+/g); // split arg on digits
   let width = INSTR_WIDTH+SIDE_PAD;
   let groupWidth = 0, groupCode = '';
-  groups.forEach(group => {
-    [groupCode, groupWidth] = (/^\d+$/.test(group)) ? generateHTMLNumSpan(group) : [group, group.length*10];
-    code += groupCode;
-    width += groupWidth;
-  });
+  if (groups) {
+    groups.forEach(group => {
+      [groupCode, groupWidth] = (/^\d+$/.test(group)) ? generateHTMLNumSpan(group) : [group, group.length*10];
+      code += groupCode;
+      width += groupWidth;
+    });
+  }
   return [code, width];
 };
 const generateHTMLNumSpan = numStr => {

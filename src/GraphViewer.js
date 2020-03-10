@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Graph from './graph/Graph';
-import { blocksConfig } from './graph/Configs';
+import { blocksConfig } from './graph/configs/BlocksConfig';
+import Dump from './demo.js';
 
 export default function GraphViewer(props) {
   const { graphId } = props;
-  const labelState = useState({});
-
-  useEffect(() => {
-    console.log("Label state updated");
-    return () => {};
-  }, [labelState]);
+  const code = Dump.analysisOutput.code;
+  const labelState = useState({code: code, labels: {}});
 
   const style = {
     height: '500px',
